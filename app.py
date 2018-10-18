@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 import sys
 from flask import Flask, render_template,jsonify,request
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
 
 app = Flask(__name__)
+CORS(app)
 
+#app.config['STATIC_FOLDER'] = 'static'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///db/superfund.sqlite"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
