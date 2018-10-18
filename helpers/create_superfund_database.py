@@ -2,6 +2,7 @@
 import sys
 import sqlite3
 import pandas as pd
+import numpy as np
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -10,7 +11,7 @@ from sqlalchemy import Column, Integer, String, Unicode, Float
 Base = declarative_base()
 
 infile = "../data/superfund_npl.csv"
-df = pd.read_csv(infile)
+df = pd.read_csv(infile,dtype={"ZIP code": np.str})
 
 engine = create_engine("sqlite:///../db/superfund.sqlite")
 Session = sessionmaker(bind=engine)
