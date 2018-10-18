@@ -17,6 +17,7 @@ Superfund = Base.classes.superfund
 LifeExpectancy = Base.classes.life_expectancy
 
 
+
 @app.route("/superfund_sites")
 def superfund_sites():
     r""" This function returns the list of superfund sites
