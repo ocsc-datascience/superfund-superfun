@@ -15,21 +15,21 @@ engine = db.get_engine()
 Base.prepare(engine, reflect=True)
 Superfund = Base.classes.superfund
 
-sys.exit()
-
-for mappedclass in Base.classes:
-    print(mappedclass)
-
-
 
 @app.route("/superfund_sites")
 def superfund_sites():
+    r""" This function returns the list of superfund sites
+    with coordinates and zip codes """
+    
+    res = db.session.query(Superfund).all()
 
-#    db.session.query(
+    dlist = []
+    for dset in res:
+        md = dset.__dict__.copy()
+        del md['_sa_instance_state']
+        dlist.append(md)
     
-    md = {}
-    
-    return jsonify(md)
+    return jsonify(dlist)
 
 
 @app.route("/")
