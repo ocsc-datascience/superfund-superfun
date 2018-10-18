@@ -2,6 +2,7 @@
 import sys
 import sqlite3
 import pandas as pd
+import numpy as np
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -10,7 +11,8 @@ from sqlalchemy import Column, Integer, String, Unicode, Float
 Base = declarative_base()
 
 infile = "../data/AVG_LIFE_EXP_BY_US_ZIP.csv"
-df = pd.read_csv(infile)
+df = pd.read_csv(infile,
+                 dtype={"zip": np.str})
 
 engine = create_engine("sqlite:///../db/superfund.sqlite")
 Session = sessionmaker(bind=engine)
@@ -27,7 +29,9 @@ class LifeExpectancy(Base):
 
 
 Base.metadata.create_all(engine)
-    
+
+# this is not a very efficient way to deal with data
+# but, hey, it's dead simple!
 for index,row in df.iterrows():
 
     sf = LifeExpectancy()

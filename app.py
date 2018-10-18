@@ -14,6 +14,7 @@ Base = automap_base(metadata=db.metadata)
 engine = db.get_engine()
 Base.prepare(engine, reflect=True)
 Superfund = Base.classes.superfund
+LifeExpectancy = Base.classes.life_expectancy
 
 
 @app.route("/superfund_sites")
@@ -31,7 +32,21 @@ def superfund_sites():
     
     return jsonify(dlist)
 
+@app.route("/life_expectancy")
+def life_expectancy():
+    r""" This function returns the average life expectancy
+    by zip code and geo coordinates"""
 
+    res = db.session.query(LifeExpectancy).all()
+
+    dlist = []
+    for dset in res:
+        md = dset.__dict__.copy()
+        del md['_sa_instance_state']
+        dlist.append(md)
+        
+    return jsonify(dlist)
+    
 @app.route("/")
 def index():
     return render_template("index.html")
