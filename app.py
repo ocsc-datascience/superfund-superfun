@@ -4,7 +4,7 @@ from flask import Flask, render_template,jsonify,request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy import Table
+from sqlalchemy.orm import Session
 
 app = Flask(__name__)
 CORS(app)
@@ -20,8 +20,8 @@ Base.prepare(engine, reflect=True)
 Superfund = Base.classes.superfund
 LifeExpectancy = Base.classes.life_expectancy
 # load the state stats table
-StateCombinedStats = Table('state_combined_stats', db.metadata,
-                           autoload=True, autoload_with=engine)
+StateCombinedStats = Base.classes.state_combined_stat
+
 
 @app.route("/map")
 def map():
@@ -30,8 +30,26 @@ def map():
 
 @app.route("/state_stats")
 def state_stats():
-
+    r"""Display the state stats plot"""
+    
     return render_template("state_stats.html")
+
+@app.route("/state_stats/get_data")
+def state_stats_get_data():
+
+    r"""API backend that returns a json of the
+    state statistics for d3"""
+    
+    res = db.session.query(StateCombinedStats).all()
+
+    dlist = []
+    for dset in res:
+        md = dset.__dict__.copy()
+        del md['_sa_instance_state']
+        dlist.append(md)
+
+    return jsonify(dlist)
+
 
 
 @app.route("/superfund_sites")
