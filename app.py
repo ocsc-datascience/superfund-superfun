@@ -19,7 +19,10 @@ Base.prepare(engine, reflect=True)
 Superfund = Base.classes.superfund
 LifeExpectancy = Base.classes.life_expectancy
 
+@app.route("/map")
+def map():
 
+    render_template("map.html")
 
 @app.route("/superfund_sites")
 def superfund_sites():
