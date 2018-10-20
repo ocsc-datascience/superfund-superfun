@@ -1,0 +1,54 @@
+State,State_Abbr, FIPS,Met Healthy People Objective of 161.4?,"Age-Adjusted_Death_Rate_per_100,000",Lower_95%_CI,Upper_95%_CI,Average_Annual_Count,Recent_Trend,Recent 5-Year_Trend_in_Death_Rates,5yr_Lower_95%_CI,5yr_Upper_95%_CI
+Alabama,AL,1000,No,175.4,172.0,178.9,10354,falling,-1.7,-2.0,-1.5
+Alaska,AK,2900,Yes,161.1,150.4,172.4,978,falling,-1.2,-1.4,-1.0
+Arizona,AZ,4000,Yes,141.1,138.5,143.7,11776,falling,-1.4,-1.5,-1.3
+Arkansas,AR,5000,No,185.5,181.0,190.0,6727,falling,-1.1,-1.3,-0.8
+California,CA,6000,Yes,143.5,142.3,144.6,59629,falling,-1.6,-1.7,-1.5
+Colorado,CO,8000,Yes,134.9,131.8,138.0,7604,falling,-1.7,-1.9,-1.5
+Connecticut,CT,9000,Yes,146.2,142.6,149.9,6666,falling,-2.0,-2.2,-1.8
+Delaware,DE,10000,No,166.1,158.8,173.7,2010,falling,-1.6,-1.8,-1.5
+District of Columbia,DC,11001,No,167.7,157.6,178.3,1072,falling,-2.0,-2.2,-1.8
+Florida,FL,12000,Yes,150.1,148.7,151.5,44027,falling,-1.6,-1.7,-1.5
+Georgia,GA,13000,No,163.8,161.3,166.3,16945,falling,-1.6,-1.8,-1.4
+Hawaii (8),HI,15000,Yes,134.4,129.0,140.0,2462,falling,-1.1,-1.2,-1.0
+Idaho,ID,16000,Yes,153.8,148.1,159.6,2849,falling,-0.9,-1.1,-0.8
+Illinois,IL,17000,No,167.9,165.8,170.1,24713,falling,-1.4,-1.5,-1.2
+Indiana,IN,18000,No,176.4,173.3,179.4,13511,falling,-1.3,-1.4,-1.2
+Iowa,IA,19000,No,164.4,160.4,168.5,6513,falling,-0.9,-1.0,-0.8
+Kansas,KS,20000,No,164.4,160.0,168.9,5604,falling,-1.1,-1.4,-0.9
+Kentucky,KY,21000,No,196.2,192.4,200.1,10312,falling,-1.1,-1.3,-0.9
+Louisiana,LA,22000,No,180.3,176.6,184.1,9397,falling,-1.5,-1.7,-1.4
+Maine,ME,23000,No,177.5,171.4,183.7,3398,falling,-1.3,-1.4,-1.1
+Maryland,MD,24000,Yes,155.3,152.2,158.3,10567,falling,-1.9,-2.0,-1.8
+Massachusetts,MA,25000,Yes,153.2,150.5,156.0,12750,falling,-2.0,-2.1,-1.8
+Michigan,MI,26000,No,168.0,165.7,170.4,20732,falling,-1.1,-1.2,-1.0
+Minnesota,MN,27000,Yes,153.2,150.2,156.3,9925,stable,-1.2,-2.7,0.2
+Mississippi,MS,28000,No,188.3,183.6,193.0,6485,falling,-1.0,-1.1,-0.9
+Missouri,MO,29000,No,173.1,170.1,176.1,12965,falling,-1.3,-1.4,-1.1
+Montana,MT,30000,Yes,157.7,150.9,164.7,2130,stable,-0.1,-2.1,1.8
+Nebraska,NE,31000,Yes,158.0,152.7,163.4,3514,falling,-1.1,-1.4,-0.9
+Nevada,NV,32000,Yes,157.8,153.3,162.3,5013,falling,-1.9,-2.1,-1.6
+New Hampshire,NH,33000,No,162.1,155.9,168.4,2773,falling,-1.5,-1.6,-1.3
+New Jersey,NJ,34000,Yes,150.8,148.5,153.2,16269,falling,-2.1,-2.2,-1.9
+New Mexico,NM,35000,Yes,143.5,138.7,148.3,3591,falling,-1.3,-1.4,-1.1
+New York,NY,36000,Yes,148.4,146.9,150.0,35088,falling,-1.5,-1.6,-1.3
+North Carolina,NC,37000,No,164.8,162.4,167.2,19321,falling,-1.5,-1.7,-1.4
+North Dakota,ND,38000,Yes,152.3,144.0,161.0,1320,falling,-1.2,-1.4,-1.1
+Ohio,OH,39000,No,175.1,172.9,177.3,25396,falling,-1.2,-1.3,-1.1
+Oklahoma,OK,40000,No,184.2,180.2,188.3,8280,falling,-0.8,-1.0,-0.7
+Oregon,OR,41000,Yes,160.4,156.8,164.0,8093,falling,-1.5,-1.7,-1.4
+Pennsylvania,PA,42000,No,167.0,165.0,169.0,28693,falling,-1.5,-1.6,-1.4
+Puerto Rico (8),PR,72001,Yes,111.6,108.6,114.8,5158,stable,-2.4,-4.7,0.0
+Rhode Island,RI,44000,No,163.2,156.3,170.4,2226,falling,-1.6,-1.8,-1.4
+South Carolina,SC,45000,No,166.8,163.5,170.2,9950,falling,-1.5,-1.7,-1.3
+South Dakota,SD,46000,Yes,153.9,146.4,161.8,1640,falling,-1.0,-1.2,-0.8
+Tennessee,TN,47000,No,180.8,177.7,183.8,14214,falling,-1.4,-1.5,-1.2
+Texas,TX,48000,Yes,149.6,148.1,151.2,39120,falling,-2.0,-2.6,-1.5
+United States,US,0,Yes,158.7,158.3,159.1,595919,falling,-1.5,-1.6,-1.5
+Utah,UT,49000,Yes,126.0,121.5,130.6,3091,falling,-1.1,-1.2,-0.9
+Vermont,VT,50000,No,165.4,156.6,174.6,1399,falling,-1.2,-1.4,-1.1
+Virginia,VA,51000,Yes,159.6,157.0,162.3,14947,falling,-1.8,-1.9,-1.6
+Washington,WA,53000,Yes,156.7,154.0,159.6,12687,falling,-1.6,-1.9,-1.4
+West Virginia,WV,54000,No,189.7,184.3,195.3,4839,falling,-1.0,-1.1,-0.9
+Wisconsin,WI,55000,Yes,159.5,156.5,162.5,11423,falling,-1.9,-2.9,-0.9
+Wyoming,WY,56000,Yes,139.7,130.6,149.2,931,falling,-1.8,-2.1,-1.4
