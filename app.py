@@ -26,13 +26,13 @@ StateCombinedStats = Base.classes.state_combined_stat
 @app.route("/map")
 def map():
 
-    return render_template("map.html")
+    return render_template("map.html",xpage="map")
 
 @app.route("/state_stats")
 def state_stats():
     r"""Display the state stats plot"""
     
-    return render_template("state_stats.html")
+    return render_template("state_stats.html",xpage="state stats")
 
 @app.route("/state_stats/get_data")
 def state_stats_get_data():
