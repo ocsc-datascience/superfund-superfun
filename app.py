@@ -4,6 +4,7 @@ from flask import Flask, render_template,jsonify,request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
+from sqlalchemy import Table
 
 app = Flask(__name__)
 CORS(app)
@@ -18,11 +19,20 @@ engine = db.get_engine()
 Base.prepare(engine, reflect=True)
 Superfund = Base.classes.superfund
 LifeExpectancy = Base.classes.life_expectancy
+# load the state stats table
+StateCombinedStats = Table('state_combined_stats', db.metadata,
+                           autoload=True, autoload_with=engine)
 
 @app.route("/map")
 def map():
 
     return render_template("map.html")
+
+@app.route("/state_stats")
+def state_stats():
+
+    return render_template("state_stats.html")
+
 
 @app.route("/superfund_sites")
 def superfund_sites():
