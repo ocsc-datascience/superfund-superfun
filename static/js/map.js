@@ -1,32 +1,57 @@
-// Perform an API call to the USGS earthquake feed
-d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson", function(data) {
-    createFeatures(data.features);
-});
-
-function createFeatures(earthquakeData) {       
-
-  var earthquakes = L.geoJson(earthquakeData, {
-    onEachFeature: function (feature, layer){
-      layer.bindPopup("<h3>" + feature.properties.place + "<br> Magnitude: " + feature.properties.mag +
-      "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
-    },
-    pointToLayer: function (feature, latlng) {
-      return new L.circle(latlng,
-        {radius: feature.properties.mag * 35000,
-          fillColor: getColor(feature.properties.mag),
-          fillOpacity: .7,
-          stroke: true,
-          color: "black",
-          weight: .5
-      })
-    }
+// Read in data from the app.py
+d3.json("/superfund_sites", function(superfundData) {
+  var superfundMarkers = [];  
+  superfundData.forEach(function(data) {
+  //   data.address = data.address;
+  //   data.city = data.city;
+  //   data.county = data.county;
+  //   data.epa_id = data.epa_id;
+  //   data.fips = data.fips;
+     data.hrs_score = +data.hrs_score;
+  //   data.id = data.id;
+     data.latitude = +data.latitude;
+     data.longitude = +data.longitude;
+    //  data.name = data.name;
+  //   data.nlp_status = data.nlp_status;
+  //   data.nlp_status_date = data.nlp_status_date;
+  //   data.site_id = data.site_id;
+  //   data.state = data.state;
+  //   data.xzip = data.xzip;
+  superfundMarkers.push(L.marker([data.latitude, data.longitude])
+                  .bindPopup(data.name + "<br> HRS Score: " + data.hrs_score))
+  
+  
+    return console.log(data);
   });
+  createMap(superfundMarkers)
 
-  // Sending earthquake layer to the createMap function
-  createMap(earthquakes)
-}
+});
+// console.log("site_id");
 
-function createMap(earthquakes) {
+// function createFeatures(superfunds) {       
+
+//   var superfunds = L.json(superfundData, {
+//     onEach: function (data, layer){
+//       layer.bindPopup("<h3>" + data + "<br> Magnitude: " + data +
+//       "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
+//     },
+//     pointToLayer: function (feature, latlng) {
+//       return new L.circle(latlng,
+//         {radius: feature.properties.mag * 1000,
+//           fillColor: getColor(feature.properties.mag),
+//           fillOpacity: .7,
+//           stroke: true,
+//           color: "black",
+//           weight: .5
+//       })
+//     }
+//   });
+
+  // Sending superfund layer to the createMap function
+//   createMap(superfunds)
+// }
+
+function createMap(superfunds) {
 
   // Define map layers
   var satelliteMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -57,29 +82,31 @@ function createMap(earthquakes) {
   };
 
   // Add a tectonic plate layer
-  var tectonicPlates = new L.LayerGroup();
+  var income = new L.LayerGroup();
+  var superfundLayer = L.layerGroup(superfunds);
+
 
   // Create fault line layer
   var overlayMaps = {
-    Earthquakes: earthquakes,
-    "Tectonic Plates": tectonicPlates
+    Superfunds: superfunds,
+    "Median Household Income": income
   };
 
-  // Create map, giving it the streetMap and earthquakes layers to display on load
+  // Create map, giving it the streetMap and superfund and income layers to display on load
   var myMap = L.map("map", {
-    center: [31.7, -7.09],
-    zoom: 2.5,
-    layers: [streetMap, earthquakes, tectonicPlates]
+    center: [39.8283, -98.5795],
+    zoom: 4.2,
+    layers: [streetMap, superfundLayer, income]
   });
 
    // Add Fault lines data
-   d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json", function(plateData) {
+   d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json", function(incomeData) {
      
-    L.geoJson(plateData, {
+    L.geoJson(incomeData, {
        color: "orangered",
        weight: 2
      })
-     .addTo(tectonicPlates);
+     .addTo(income);
    });
 
   // Create a layer control
@@ -98,7 +125,7 @@ function createMap(earthquakes) {
               grades = [0, 1, 2, 3, 4, 5],
               labels = [];
 
-  // Loop through intervals to generate labels and colored squares for earthquake magnitude legend
+  // Loop through intervals to generate labels and colored squares for income legend
     for (var i = 0; i < grades.length; i++) {
         div.innerHTML +=
             '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
