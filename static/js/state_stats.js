@@ -1,5 +1,5 @@
-var svgWidth = 800;
-var svgHeight = 500;
+var svgWidth = 1100;
+var svgHeight = 750;
 var svgRatio = svgWidth / svgHeight;
 
 var margin = {
@@ -127,7 +127,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesText) {
       break;
     case "population_density":
       var xlabel = "Pop Density";
-      var xformat = d3.format("");
+      var xformat = d3.format(",");
       var xsuffix = "";
       break;
     case "income":
@@ -139,20 +139,25 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesText) {
   switch (chosenYAxis) {
     case "cancer_mortality":
       var ylabel = "Cancer Mortality";
+      var yformat = d3.format(",");
+      var ysuffix = "";
       break;
     case "cancer_prevalence":
       var ylabel = "Cancer Prevalence";
+      var yformat = d3.format(",");
+      var ysuffix = "";
       break;
     case "veterans":
       var ylabel = "Veterans";
-      var xsuffix = "%";
+      var yformat = d3.format("");
+      var ysuffix = "%";
   }
   
   var toolTip = d3.tip()
     .attr("class", "tooltip")
     .offset([80, -60])
     .html(function(d) {
-      return (`${d.state}<br>${xlabel}: ${xformat(d[chosenXAxis])}${xsuffix}<br>${ylabel}: ${d[chosenYAxis]}`);
+      return (`${d.state}<br>${xlabel}: ${xformat(d[chosenXAxis])}${xsuffix}<br>${ylabel}: ${yformat(d[chosenYAxis])}${ysuffix}`);
     });
 
   circlesText.call(toolTip);

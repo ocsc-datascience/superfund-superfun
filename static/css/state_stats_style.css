@@ -4,20 +4,26 @@
 }
 
 /* Sticky Footer rules (https://getbootstrap.com/examples/sticky-footer/) */
-html {
+/* html {
   position: relative;
   min-height: 100%;
-}
+} */
 
-body {
+/* body {
   /* Padding bottom by footer height */
-  padding-bottom: 80px;
-}
+  /* padding-bottom: 80px;
+} */
 
 h2 {
   align-items: center;
   align-self: auto;
   text-align: center;
+}
+
+
+svg {
+  display: block;
+  margin: auto;
 }
 
 .chart::before {
@@ -29,14 +35,8 @@ h2 {
   width: 400px;
   height: 300px;
   content: " ";
-  /* background-image: url("maxresdefault.jpg"); */
-  background-repeat: no-repeat;
-  background-position: 50% 0;
-  background-size: cover;
   opacity: 0.3;
 }
-
-
 
 .tooltip {
   position: absolute;
