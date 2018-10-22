@@ -1,10 +1,7 @@
-// Link to superfund data
-var link = "/superfund_sites";
-
-// Grabbing our data..
+// Grabbing superfund site data..
 var superfundSites = [];
 
-d3.json(link, function(data) {
+d3.json("/superfund_sites", function(data) {
   data.forEach(function(sqlitedata) {
     data.name = sqlitedata.name;
     data.address = sqlitedata.address;
@@ -59,26 +56,97 @@ function createMap(superfundSites) {
       "Light Map": lightMap
     };
 
+    // Add superfund and stateBoundary layers
     var superfundLayer = L.layerGroup(superfundSites);
+    var stateBoundaries = new L.LayerGroup()
 
     // Overlays that may be toggled on or off
     var overlayMaps = {
-      "Superfund Sites": superfundLayer
+      "Superfund Sites": superfundLayer,
+      "State Boundaries": stateBoundaries
     };
 
     // Creating map object and set default layers
     var myMap = L.map("map", {
       center: [37.8283, -98.5795],
         zoom: 5,
-        layers: [streetMap, superfundLayer]
+        layers: [streetMap, superfundLayer, stateBoundaries]
     });
 
-    // Pass map layers into layer control
-    // Add the layer control to the map
+
+  // Pass map layers into layer control
+  // Add the layer control to the map
     L.control.layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(myMap);
+
+  var geojson;
+
+  // Add color to states
+    function getStateColor(d) {
+      return d > 1000 ? '#800026' :
+             d > 500  ? '#BD0026' :
+             d > 200  ? '#E31A1C' :
+             d > 100  ? '#FC4E2A' :
+             d > 50   ? '#FD8D3C' :
+             d > 20   ? '#FEB24C' :
+             d > 10   ? '#FED976' :
+                        '#FFEDA0' ;
+}
+
+  // Add style to assign state color based on population density
+    function style(feature) {
+      return {
+        fillColor: getStateColor(feature.properties.density),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+  }
+   
+  // Highlight state on mouse over
+    function highlightFeature(e) {
+      var layer = e.target;
   
+      layer.setStyle({
+          weight: 5,
+          color: '#666',
+          dashArray: '',
+          fillOpacity: 0.7
+      });
+  
+      if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+          layer.bringToFront();
+      }
+  }
+ 
+// Reset on mouseout
+    function resetHighlight(e) {
+      geojson.resetStyle(e.target);
+    }
+
+// Zoom to state on click
+    function zoomToFeature(e) {
+      map.fitBounds(e.target.getBounds());
+    }
+
+// All features together
+    function onEachFeature(feature, layer) {
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+      });
+    }
+
+geojson = L.geoJson(statesData, {
+      style: style,
+      onEachFeature: onEachFeature
+      }).addTo(stateBoundaries);
+
+
 
   // Create legend
   var legend = L.control( {position: 'bottomright'});
@@ -86,7 +154,7 @@ function createMap(superfundSites) {
   legend.onAdd = function (myMap) {
 
     var div = L.DomUtil.create('div', 'info legend'),
-              grades = [0, 10, 20, 30, 40, 50],
+              grades = [0, 10, 20, 30, 40, 50, 60, 70],
               labels = [];
 
   // Loop through intervals to generate labels and colored squares for superfund hazard rank legend
@@ -103,10 +171,12 @@ function createMap(superfundSites) {
 }
 
   function getColor(d) {
-    return d > 50 ? '#FF3300' :
-    d > 40  ? '#FF6600' :
-    d > 30 ? '#FF9900' :
-    d > 20 ? '#FFCC00' :
-    d > 10  ? '#99FF00' :
-              '#00FF00';
+    return d > 70 ? '#b30000' :
+           d > 60 ? '#e60000' :
+           d > 50 ? '#FF3300' :
+           d > 40 ? '#FF6600' :
+           d > 30 ? '#FF9900' :
+           d > 20 ? '#FFCC00' :
+           d > 10 ? '#99FF00' :
+                     '#00FF00';
   }
