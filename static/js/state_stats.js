@@ -142,8 +142,8 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesText) {
       var yformat = d3.format(",");
       var ysuffix = "";
       break;
-    case "cancer_prevalence":
-      var ylabel = "Cancer Prevalence";
+    case "cancer_morbidity":
+      var ylabel = "Cancer Morbidity";
       var yformat = d3.format(",");
       var ysuffix = "";
       break;
@@ -188,7 +188,7 @@ d3.json("/state_stats/get_data").then(function(statesData) {
       data.housing_density = +data.housing_density;
       data.population_density = +data.population_density;
       data.cancer_mortality = +data.cancer_death_rate;
-      data.cancer_prevalence = +data.cancer_prevalence_rate;
+      data.cancer_morbidity = +data.cancer_prevalence_rate;
       data.cancer_incidence = +data.cancer_incidence_rate;
       data.superfund_sites = +data.sf_site_count;
       data.superfund_score = +data.avg_hrsscore;
@@ -277,15 +277,15 @@ d3.json("/state_stats/get_data").then(function(statesData) {
     .attr("x", 0)
     .attr("value", "cancer_mortality") // value to grab for event listener
     .classed("active", true)
-    .text("Cancer Mortality");
+    .text("Cancer Mortality (per 100,000)");
   
   var cancerPrevalenceLabel = yLabelsGroup.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", -60)
     .attr("x", 0)
-    .attr("value", "cancer_prevalence") // value to grab for event listener
+    .attr("value", "cancer_morbidity") // value to grab for event listener
     .classed("inactive", true)
-    .text("Cancer Prevalence");
+    .text("Cancer Morbidity (per 100,000)");
 
   var pctVeteransLabel = yLabelsGroup.append("text")
     .attr("transform", "rotate(-90)")  
@@ -406,7 +406,7 @@ d3.json("/state_stats/get_data").then(function(statesData) {
               .classed("active", false)
               .classed("inactive", true);
               break;
-          case "cancer_prevalence":
+          case "cancer_morbidity":
             cancerMortalityLabel
               .classed("active", false)
               .classed("inactive", true);
