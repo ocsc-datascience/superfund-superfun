@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
@@ -34,6 +35,14 @@ def state_stats():
     
     return render_template("state_stats.html",xpage="state stats")
 
+@app.route("/data")
+def data():
+    r"""Display the data table plot"""
+    
+    return render_template("data.html",xpage="Data")
+
+
+
 @app.route("/state_stats/get_data")
 def state_stats_get_data():
 
@@ -43,11 +52,30 @@ def state_stats_get_data():
     res = db.session.query(StateCombinedStats).all()
 
     dlist = []
+
     for dset in res:
         md = dset.__dict__.copy()
         del md['_sa_instance_state']
         dlist.append(md)
 
+
+    # find min and max for
+    # selected columns
+    min_max_list = ['median_household_income',
+                    'avg_hrsscore','population_density',
+                    'cancer_death_rate']
+
+    for item in min_max_list:
+
+        dd = [ rec[item] for rec in dlist ]
+        
+        xmin = min(dd)
+        xmax = max(dd)
+
+        for i in range(len(dlist)):
+            dlist[i][item+"_max"] = xmax
+            dlist[i][item+"_min"] = xmin
+        
     return jsonify(dlist)
 
 

@@ -31,10 +31,16 @@
           {% endif %}  
             <a class="nav-link" href="state_stats">State Stats</a>
           </li>
+          {% if xpage == "Data" %}
           <li class="nav-item">
-            <a class="nav-link" href="#">Another Thing</a>
+            <a class="nav-link active" href="data">Data</a>
           </li>
-        </ul>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="data">Data</a>
+          </li>
+          {% endif %}
+         </ul>
       </div>
     </nav>
     </div>
