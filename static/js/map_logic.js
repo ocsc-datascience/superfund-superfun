@@ -61,12 +61,19 @@ function createMap(superfundSites) {
   // Add superfund and stateBoundary layers
   var superfundLayer = L.layerGroup(superfundSites);
   var stateBoundaries = new L.LayerGroup()
+  var emptyLayer = new L.LayerGroup()
 
   // Overlays that may be toggled on or off
   var overlayMaps = {
     "Superfund Sites": superfundLayer,
-    "State Boundaries": stateBoundaries
+ //   "State Boundaries": stateBoundaries
   };
+
+  var overlayMapsAsBase = {
+    "Nothing": emptyLayer,
+    "# Superfund Sites": stateBoundaries
+  };
+
 
   // Creating map object and set default layers
   var myMap = L.map("map", {
@@ -81,6 +88,12 @@ function createMap(superfundSites) {
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
+
+  var xcontrol = L.control.layers(overlayMapsAsBase,{},{
+    collapsed: false
+  });
+  myMap.addControl(xcontrol);
+
 
   var geojson;
 
@@ -98,7 +111,7 @@ function createMap(superfundSites) {
 
   // Add style to assign state color based on population density
   function style(feature) {
-    console.log(feature.properties)
+    // console.log(feature.properties)
     return {
 //      fillColor: getStateColor(feature.properties.density),
       fillColor: getStateColor(feature.properties.state_stats.sf_site_count),
