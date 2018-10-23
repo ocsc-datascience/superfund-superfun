@@ -20,6 +20,11 @@ h2 {
   text-align: center;
 }
 
+h3 {
+  align-items: center;
+  align-self: auto;
+  text-align: center;
+}
 
 svg {
   display: block;

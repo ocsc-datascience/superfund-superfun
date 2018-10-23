@@ -26,6 +26,7 @@ var chartGroup = svg.append("g")
 // Initial Params
 var chosenXAxis = "superfund_sites";
 var chosenYAxis = "cancer_mortality";
+var correlation = -0.13  // initial correlation value needs to change if initial x and y variables change
 
 // Title case function
 function titleCase(str) {
@@ -36,7 +37,9 @@ function titleCase(str) {
   return str.join(' ');
 };
 
-subTitle = titleCase(`${chosenXAxis}`) + " and " + titleCase(`${chosenYAxis}`);
+Title = titleCase(`${chosenXAxis}`) + " and " + titleCase(`${chosenYAxis}`);
+subTitle = `(r = ${correlation})`;
+d3.select("#Title").html(Title);
 d3.select("#subTitle").html(subTitle);
 //------------------------------------------------------------------
 
@@ -175,7 +178,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesText) {
 
 //----------------------------------------------------------------
 
-// Retrieve data from the CSV file and execute everything below
+// Retrieve data from the API and execute everything below
 d3.json("/state_stats/get_data").then(function(statesData) {
     statesData.forEach(function(data) {
       data.state = data.state;
@@ -192,14 +195,17 @@ d3.json("/state_stats/get_data").then(function(statesData) {
       data.cancer_incidence = +data.cancer_incidence_rate;
       data.superfund_sites = +data.sf_site_count;
       data.superfund_score = +data.avg_hrsscore;
+
 });
+
+  var correlation = ss.sampleCorrelation(statesData.map(d => d[chosenXAxis]), statesData.map(d => d[chosenYAxis])).toFixed(2);
 
 // xLinearScale function above csv import
   var xLinearScale = xScale(statesData, chosenXAxis);
 
   // Create y scale function
   var yLinearScale = yScale(statesData, chosenYAxis);
-    
+
   // Create initial axis functions
   var bottomAxis = d3.axisBottom(xLinearScale);
   var leftAxis = d3.axisLeft(yLinearScale);
@@ -307,6 +313,9 @@ d3.json("/state_stats/get_data").then(function(statesData) {
 
         // replaces chosenXAxis with value
         chosenXAxis = value;
+      
+        // replaces correlation value
+        correlation = ss.sampleCorrelation(statesData.map(d => d[chosenXAxis]), statesData.map(d => d[chosenYAxis])).toFixed(2);
 
         // functions here found above csv import
         // updates x scale for new data
@@ -324,8 +333,10 @@ d3.json("/state_stats/get_data").then(function(statesData) {
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
-     subTitle = titleCase(`${chosenXAxis}`) + " and " + titleCase(`${chosenYAxis}`);
-        d3.select("#subTitle").html(subTitle);   
+        Title = titleCase(`${chosenXAxis}`) + " and " + titleCase(`${chosenYAxis}`);
+        subTitle = `(r = ${correlation})`;
+        d3.select("#Title").html(Title);
+        d3.select("#subTitle").html(subTitle);
         
         // changes classes to change bold text
         switch (chosenXAxis) {
@@ -374,6 +385,9 @@ d3.json("/state_stats/get_data").then(function(statesData) {
         // replaces chosenXAxis with value
         chosenYAxis = value;
 
+        // replaces correlation value
+        correlation = ss.sampleCorrelation(statesData.map(d => d[chosenXAxis]), statesData.map(d => d[chosenYAxis])).toFixed(2);
+
         // functions here found above csv import
         // updates x scale for new data
         yLinearScale = yScale(statesData, chosenYAxis);
@@ -390,8 +404,10 @@ d3.json("/state_stats/get_data").then(function(statesData) {
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
-        subTitle = titleCase(`${chosenXAxis}`) + " and " + titleCase(`${chosenYAxis}`)
-          d3.select("#subTitle").html(subTitle);
+        Title = titleCase(`${chosenXAxis}`) + " and " + titleCase(`${chosenYAxis}`);
+        subTitle = `(r = ${correlation})`;
+        d3.select("#Title").html(Title);
+        d3.select("#subTitle").html(subTitle);
 
         // changes classes to change bold text
         switch (chosenYAxis) {
@@ -427,8 +443,6 @@ d3.json("/state_stats/get_data").then(function(statesData) {
             pctVeteransLabel
               .classed("active", true)
               .classed("inactive", false);
-
-
         }
       }
     });
