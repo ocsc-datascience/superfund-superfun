@@ -109,12 +109,24 @@ function createMap(superfundSites) {
                   '#FFEDA0';
   }
 
+  function colorScale(d,min,max) {
+    var colors = ['#FFEDA0', '#FED976', '#FEB24C',
+      '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
+
+    var cindex = Math.round(Math.abs((d-min)/(max-min) * 7));
+    console.log(cindex);
+
+    return colors[cindex];
+  }
+
   // Add style to assign state color based on population density
   function style(feature) {
     // console.log(feature.properties)
     return {
 //      fillColor: getStateColor(feature.properties.density),
-      fillColor: getStateColor(feature.properties.state_stats.sf_site_count),
+      fillColor: colorScale(feature.properties.state_stats.cancer_death_rate,
+        feature.properties.state_stats.cancer_death_rate_min,
+        feature.properties.state_stats.cancer_death_rate_max),
       weight: 2,
       opacity: 1,
       color: 'white',
