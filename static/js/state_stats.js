@@ -1,23 +1,30 @@
-var svgWidth = 1100;
-var svgHeight = 750;
-var svgRatio = svgWidth / svgHeight;
+var w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName('div#scatter')[0],
+    x = w.innerWidth || e.clientWidth || g.clientWidth,
+    y = w.innerHeight  || e.clientHeight|| g.clientHeight;
 
 var margin = {
-  top: 20,
-  right: 40,
-  bottom: 80,
-  left: 90
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 330
   };
 
-var width = svgWidth - margin.left - margin.right;
-var height = svgHeight - margin.top - margin.bottom;
+var width = 700;
+var height = 420;
 
-// Create an SVG wrapper, append an SVG group that will hold our chart,
-// and shift the latter by left and top margin
-var svg = d3.select("#scatter")
-  .append("svg")
-  .attr("width", svgWidth)
-  .attr("height", svgHeight);
+// Create a scalable SVG wrapper, append an SVG group that will hold our chart
+var svg = d3.select('div#scatter')
+   .append("div")
+   .classed("svg-container", true) //container class to make it responsive
+   .append("svg")
+   //responsive SVG needs these 2 attributes and no width and height attr
+   .attr("preserveAspectRatio", "xMidYMid meet")
+   .attr("viewBox", "0 0 1350 1350")
+   //class to make it responsive
+   .classed("svg-content-responsive", true); 
 
 // Append an SVG group
 var chartGroup = svg.append("g")
