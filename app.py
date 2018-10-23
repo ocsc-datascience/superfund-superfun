@@ -34,6 +34,14 @@ def state_stats():
     
     return render_template("state_stats.html",xpage="state stats")
 
+@app.route("/data")
+def data():
+    r"""Display the data table plot"""
+    
+    return render_template("data.html",xpage="Data")
+
+
+
 @app.route("/state_stats/get_data")
 def state_stats_get_data():
 
