@@ -1,4 +1,4 @@
-// Grabbing superfund site data..
+// Grabbing superfund site data.
 var superfundSites = [];
 var stateStats = [];
 
@@ -15,7 +15,7 @@ d3.json("/superfund_sites", function (data) {
       L.circleMarker([data.latitude, data.longitude],
         {
           radius: 10,
-          fillColor: getColor(data.hrs_score),
+          fillColor: getColorSFSites(data.hrs_score),
           fillOpacity: .7,
           stroke: true,
           color: "black",
@@ -25,11 +25,79 @@ d3.json("/superfund_sites", function (data) {
       ).bindPopup(data.name.bold() + "<br>" + data.address + "<br>" + data.city + ", " + data.state + "<br>" + "HRS Score: " + data.hrs_score.toString().bold()));
   });
 
-  createMap(superfundSites)
+  var statePopDensChloro;
+  var stateCancerChloro;
+
+  d3.json("/state_stats/get_data", function (data) {
+    data.forEach(function (xdata) {
+      var xstate = xdata.state;
+      objIndex = statesData.features.findIndex((obj => obj.properties.name == xstate));
+      statesData.features[objIndex].properties.state_stats = xdata;
+    });
+    // remove Puerto Rico
+    statesData.features = statesData.features.filter(function (item) {
+           return item.properties.name !== "Puerto Rico"
+    });
+
+    statePopDensChloro = createStateChloro("population_density");
+    stateCancerChloro = createStateChloro("cancer_death_rate");
+    stateHRSChloro = createStateChloro("avg_hrsscore");
+    stateHRSChloro = createStateChloro("avg_hrsscore");
+    stateIncomeChloro = createStateChloro("median_household_income")
+
+    createMap(superfundSites,statePopDensChloro,
+      stateCancerChloro,stateHRSChloro,stateIncomeChloro);
+
+  });
+
+
+  
 
 });
 
-function createMap(superfundSites) {
+function createStateChloro(prop) {
+
+  var chloro = new L.LayerGroup();
+
+  // All features together
+  function XonEachFeature(feature, layer) {
+    layer.on({
+      mouseover: highlightFeature,
+      mouseout: resetHighlight,
+      click: zoomToFeature
+    });
+  }
+
+  // Add style to assign state color based on population density
+  function Xstyle(feature) {
+    // console.log(feature.properties)
+    var prop_max = prop+"_max";
+    var prop_min = prop+"_min";
+    console.log(feature.properties.state_stats);
+
+    return {
+      fillColor: colorScale(feature.properties.state_stats[prop],
+        feature.properties.state_stats[prop_min],
+        feature.properties.state_stats[prop_max]),
+      weight: 2,
+      opacity: 1,
+      color: 'white',
+      dashArray: '3',
+      fillOpacity: 0.7
+    };
+  }
+
+  geojson = L.geoJson(statesData, {
+      style: Xstyle,
+      onEachFeature: XonEachFeature
+   }).addTo(chloro);
+
+  return chloro;
+}
+
+
+function createMap(superfundSites,statePopDensChloro,
+  stateCancerChloro,stateHRSChloro,stateIncomeChloro) {
 
   // Define tile layers
   var satelliteMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -60,7 +128,6 @@ function createMap(superfundSites) {
 
   // Add superfund and stateBoundary layers
   var superfundLayer = L.layerGroup(superfundSites);
-  var stateBoundaries = new L.LayerGroup()
   var emptyLayer = new L.LayerGroup()
 
   // Overlays that may be toggled on or off
@@ -71,15 +138,17 @@ function createMap(superfundSites) {
 
   var overlayMapsAsBase = {
     "Nothing": emptyLayer,
-    "# Superfund Sites": stateBoundaries
+    "Cancer Death Rate": stateCancerChloro,
+    "Population Density": statePopDensChloro,
+    "Avg. HRS Score": stateHRSChloro,
+    "Avg. Income": stateIncomeChloro
   };
-
 
   // Creating map object and set default layers
   var myMap = L.map("map", {
     center: [37.8283, -98.5795],
     zoom: 5,
-    layers: [streetMap, superfundLayer, stateBoundaries]
+    layers: [streetMap, superfundLayer, statePopDensChloro]
   });
 
 
@@ -95,103 +164,6 @@ function createMap(superfundSites) {
   myMap.addControl(xcontrol);
 
 
-  var geojson;
-
-  // Add color to states
-  function getStateColor(d) {
-    return d > 1000 ? '#800026' :
-      d > 500 ? '#BD0026' :
-        d > 200 ? '#E31A1C' :
-          d > 100 ? '#FC4E2A' :
-            d > 50 ? '#FD8D3C' :
-              d > 20 ? '#FEB24C' :
-                d > 10 ? '#FED976' :
-                  '#FFEDA0';
-  }
-
-  function colorScale(d,min,max) {
-    var colors = ['#FFEDA0', '#FED976', '#FEB24C',
-      '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
-
-    var cindex = Math.round(Math.abs((d-min)/(max-min) * 7));
-    console.log(cindex);
-
-    return colors[cindex];
-  }
-
-  // Add style to assign state color based on population density
-  function style(feature) {
-    // console.log(feature.properties)
-    return {
-//      fillColor: getStateColor(feature.properties.density),
-      fillColor: colorScale(feature.properties.state_stats.cancer_death_rate,
-        feature.properties.state_stats.cancer_death_rate_min,
-        feature.properties.state_stats.cancer_death_rate_max),
-      weight: 2,
-      opacity: 1,
-      color: 'white',
-      dashArray: '3',
-      fillOpacity: 0.7
-    };
-  }
-
-  // Highlight state on mouse over
-  function highlightFeature(e) {
-    var layer = e.target;
-
-    layer.setStyle({
-      weight: 5,
-      color: '#666',
-      dashArray: '',
-      fillOpacity: 0.7
-    });
-
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-      layer.bringToFront();
-    }
-  }
-
-  // Reset on mouseout
-  function resetHighlight(e) {
-    geojson.resetStyle(e.target);
-  }
-
-  // Zoom to state on click
-  function zoomToFeature(e) {
-    map.fitBounds(e.target.getBounds());
-  }
-
-  // All features together
-  function onEachFeature(feature, layer) {
-    layer.on({
-      mouseover: highlightFeature,
-      mouseout: resetHighlight,
-      click: zoomToFeature
-    });
-  }
-
-
-  d3.json("/state_stats/get_data", function (data) {
-
-    data.forEach(function (xdata) {
-      var xstate = xdata.state;
-      objIndex = statesData.features.findIndex((obj => obj.properties.name == xstate));
-      statesData.features[objIndex].properties.state_stats = xdata;
-    });
-
-    // remove Puerto Rico
-    statesData.features = statesData.features.filter(function (item) {
-      return item.properties.name !== "Puerto Rico"
-    });
-
-    geojson = L.geoJson(statesData, {
-      style: style,
-      onEachFeature: onEachFeature
-    }).addTo(stateBoundaries);
-
-  });
-
-
   // Create legend
   var legend = L.control({ position: 'bottomright' });
 
@@ -204,7 +176,7 @@ function createMap(superfundSites) {
     // Loop through intervals to generate labels and colored squares for superfund hazard rank legend
     for (var i = 0; i < grades.length; i++) {
       div.innerHTML +=
-        '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+        '<i style="background:' + getColorSFSites(grades[i] + 1) + '"></i> ' +
         grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
     }
     return div;
@@ -212,15 +184,4 @@ function createMap(superfundSites) {
 
   legend.addTo(myMap);
 
-}
-
-function getColor(d) {
-  return d > 70 ? '#b30000' :
-    d > 60 ? '#e60000' :
-      d > 50 ? '#FF3300' :
-        d > 40 ? '#FF6600' :
-          d > 30 ? '#FF9900' :
-            d > 20 ? '#FFCC00' :
-              d > 10 ? '#99FF00' :
-                '#00FF00';
 }
