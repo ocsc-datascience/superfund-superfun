@@ -3,6 +3,7 @@ var superfundSites = [];
 var stateStats = [];
 
 d3.json("/superfund_sites", function (data) {
+
   data.forEach(function (sqlitedata) {
     data.name = sqlitedata.name;
     data.address = sqlitedata.address;
@@ -27,6 +28,12 @@ d3.json("/superfund_sites", function (data) {
 
   var statePopDensChloro;
   var stateCancerChloro;
+  var stateHRSChloro;
+  var stateIncomeChloro;
+  var PopLegend;
+  var CanLegend;
+  var HRSLegend;
+  var InLegend;
 
   d3.json("/state_stats/get_data", function (data) {
     data.forEach(function (xdata) {
@@ -39,20 +46,34 @@ d3.json("/superfund_sites", function (data) {
            return item.properties.name !== "Puerto Rico"
     });
 
-    statePopDensChloro = createStateChloro("population_density");
-    stateCancerChloro = createStateChloro("cancer_death_rate");
-    stateHRSChloro = createStateChloro("avg_hrsscore");
-    stateHRSChloro = createStateChloro("avg_hrsscore");
-    stateIncomeChloro = createStateChloro("median_household_income")
+    // extract min-max data needed for legends
+    var res = createStateChloro("population_density", statesData, "Population Density");
+    statePopDensChloro = res[0];
+    PopLegend = res[1];
 
-    createMap(superfundSites,statePopDensChloro,
-      stateCancerChloro,stateHRSChloro,stateIncomeChloro);
+    res = createStateChloro("cancer_death_rate", statesData, "Cancer Death Rate");
+    stateCancerChloro = res[0];
+    CanLegend = res[1];
+
+    res = createStateChloro("avg_hrsscore", statesData, "Avg. Hazard Ranking");
+    stateHRSChloro = res[0];
+    HRSLegend = res[1];
+
+    res = createStateChloro("median_household_income", statesData, "Avg. Income");    
+    stateIncomeChloro = res[0];
+    InLegend = res[1];
+
+    createMap(superfundSites,
+      statePopDensChloro,PopLegend,
+      stateCancerChloro,CanLegend,
+      stateHRSChloro,HRSLegend,
+      stateIncomeChloro,InLegend);
 
   });
 
 });
 
-function createStateChloro(prop) {
+function createStateChloro(prop,sdata,name) {
 
   var chloro = new L.LayerGroup();
 
@@ -87,12 +108,45 @@ function createStateChloro(prop) {
       onEachFeature: XonEachFeature
    }).addTo(chloro);
 
-  return chloro;
+
+  var xlegend = L.control({ position: 'bottomleft' });
+  xlegend.onAdd = function () {
+
+    var prop_max = prop + "_max";
+    var prop_min = prop + "_min";
+
+    // compute grades
+    var min = sdata.features[0].properties.state_stats[prop_min];
+    var max = sdata.features[0].properties.state_stats[prop_max];
+
+    var bgrades = [0,1,2,3,4,5,6]
+    for(i=0;i<bgrades.length;i++) {
+      bgrades[i] = Math.round(bgrades[i]/7.0 * (max-min) + min);
+    }
+
+    var div = L.DomUtil.create('div', 'info legend'),
+      grades = bgrades,
+      labels = [];
+
+    div.innerHTML += '<b>'+name+'</b><br>'
+    // Loop through intervals to generate labels and colored squares for superfund hazard rank legend
+    for (var i = 0; i < grades.length; i++) {
+      div.innerHTML +=
+        '<i style="background:' + colorScale(grades[i] + 1,min,max) + '"></i> ' +
+        grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+    return div;
+  };
+
+  return [chloro,xlegend];
 }
 
 
-function createMap(superfundSites,statePopDensChloro,
-  stateCancerChloro,stateHRSChloro,stateIncomeChloro) {
+function createMap(superfundSites,
+  statePopDensChloro,PopLegend,
+  stateCancerChloro,CanLegend,
+  stateHRSChloro,HRSLegend,
+  stateIncomeChloro,InLegend) {
 
   // Define tile layers
   var satelliteMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -176,11 +230,13 @@ function createMap(superfundSites,statePopDensChloro,
   };
   legendSF.addTo(myMap);
 
+
   myMap.on('overlayadd', function (eventLayer) {
     if (eventLayer.name === "Superfund Sites") {
       legendSF.addTo(this);
     }
-    else { 
+    else {
+      CanLegend.addTo(this);
       this.removeControl(legendSF);
     }
   });
@@ -189,6 +245,38 @@ function createMap(superfundSites,statePopDensChloro,
     if (eventLayer.name === "Superfund Sites") {
       this.removeControl(legendSF);
     }
+  });
+
+  myMap.on('baselayerchange', function (eventLayer) {
+    console.log(eventLayer.name);
+    if (eventLayer.name === "Cancer Death Rate") {
+      CanLegend.addTo(this);
+      this.removeControl(HRSLegend);
+      this.removeControl(InLegend);
+      this.removeControl(PopLegend);
+    } else if (eventLayer.name === "Population Density"){
+      PopLegend.addTo(this);
+      this.removeControl(CanLegend);
+      this.removeControl(HRSLegend);
+      this.removeControl(InLegend);
+    } else if (eventLayer.name === "Avg. HRS Score") {
+      HRSLegend.addTo(this);
+      this.removeControl(CanLegend);
+      this.removeControl(PopLegend);
+      this.removeControl(InLegend);
+    } else if (eventLayer.name === "Avg. Income") {
+      InLegend.addTo(this);
+      this.removeControl(CanLegend);
+      this.removeControl(PopLegend);
+      this.removeControl(HRSLegend);
+    } else if (eventLayer.name === "Nothing") {
+      this.removeControl(CanLegend);
+      this.removeControl(PopLegend);
+      this.removeControl(HRSLegend);
+      this.removeControl(InLegend);
+    }
+
+
   });
 
 
