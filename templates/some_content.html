@@ -9,51 +9,53 @@
      integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
      crossorigin=""/>
      
-     <!-- Bootstrap CSS -->
+    <!-- Our CSS -->
+    <link rel="stylesheet" type="text/css" href="../static/css/map_style.css">
     <style type="text/css">
          .jumbotron {
            background-image: url("https://www.conservationinstitute.org/wp-content/uploads/2018/05/1200-8609-land-pollution-photo2.jpg");
            background-size: cover;
            font-family: 'IM Fell English SC', serif;
-           color: rgba(100, 182, 7, 0.911);
-           padding: 0000;
-           margin: 5px 000;
+           font-weight: bolder;
+           font-size-adjust: initial;
+           color: black;
+           text-shadow: 2px 2px 8px rgb(38, 121, 13);
+           padding: 20;
+           margin: 50px 000;
            text-align:center; }
      </style>
 
-    <link rel="stylesheet" type="text/css" href="../static/css/map_style.css">
-
-     </head>
-     <body>
-     
        <div class="container">
          <div class="row">
            <div class="col-md-12 jumbotron text-center">
              <h1>Superfund Superfun Dashboard</h1>
-             <p>Use the interactive charts below to explore the Superfund Sites</p>
            </div>
          </div>
          <div class="row">
-           <div class="col-md-2">
+           <div class="col-md-6">
              <div class="well">
                <h5>SELECT Site ID:</h5>
                <select id="selDataset" onchange="optionChanged(this.value)"></select>
              </div>
              <div class="panel panel-primary">
+               <br>
                <div class="panel-heading">
-                 <h3 class="panel-title">Superfund Site Details</h3>
+                 <h3 class="panel-title" id="tableTitle">Superfund Site Detail</h3>
                </div>
                <div id="sample-metadata" class="panel-body" style="font-size: 9pt; font-weight: bold;"></div>
              </div>
            </div>
-           <div class="col-md-5">
-             <div class="map-wrapper" id="maptwo"></div>
+           <div class="col-md-6">
+                <div style="float: right" id="gauge"></div>
+            </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                  <h3 id="sitemap_title"></h3>
+             <div class="map-wrapper" id="sitemap"></div>
            </div>
-           <div class="col-md-5">
-             <div id="gauge"></div>
            </div>
          </div>
-     </div>
      <script src="https://cdn.plot.ly/plotly-1.31.2.min.js"></script>
      
      <!-- D3 -->

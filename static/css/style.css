@@ -4,8 +4,8 @@ html {
   position: relative;
   min-height: 100%;
   min-width: 100%;
-  margin: 0;
-  padding: 0;
+  margin: auto;
+  padding: auto;
 }
 
 body {
@@ -13,15 +13,15 @@ body {
   /* margin-bottom: 60px; */
   min-height: 100%;
   min-width: 100%;
-  margin: 0;
-  padding: 0;
+  margin: auto;
+  padding: auto;
  }
 
 main {
   min-height: 100%;
   max-height: 100%;
-  margin: 0;
-  padding: 0;
+  margin: auto;
+  padding: auto;
 }
 
 .footer {
@@ -42,8 +42,8 @@ main {
 html, body, main > .container {
   height: 100%;
   width: 100%;
-  padding: 0;
-  margin: 0;
+  padding: auto;
+  margin: auto;
 }
 
 main > .container {
@@ -51,6 +51,13 @@ main > .container {
   width: 100%;
   margin-top: 40px;
   padding-top: 40px;
+}
+
+#dashboard-container {
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  padding: auto;
 }
 
 #map {

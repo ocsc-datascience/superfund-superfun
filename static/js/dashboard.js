@@ -3,7 +3,14 @@ function buildMetadata() {
   // Use `d3.json` to fetch the metadata for a sample
   id = d3.select("#selDataset").property("value");
   d3.json("/superfund_sites/"+id).then(function(metaData) {
+
+    function pad(n) {
+      return (n < 1000000) ? ("0" + n) : n;
+    };
     
+    var site_id = pad(metaData.site_id);
+    console.log(site_id);
+
       // Use d3 to select the panel with id of `#sample-metadata` and id of `#gauge`
       var metaPanel = d3.select("#sample-metadata");
 
@@ -13,40 +20,53 @@ function buildMetadata() {
     // Use `Object.entries` to add each key and value pair to the panel
     // Hint: Inside the loop, you will need to use d3 to append new
     // tags for each key-value in the metadata.  
-    
-        Object.entries(metaData).forEach( ([key, value]) => {
-       // var row = metaPanel.insert("tr");
-        var cell = metaPanel.insert("p");
-        var kontent = key + ": " + value;
-        cell.text(kontent);
-            });
+      // Object.entries(metaData).metaPanel.insert(`<tr>Name: ${name}`);
+      d3.select("#sample-metadata")
+        .html(`<h3>${metaData.name}<h3>
+               <h5>Address: ${metaData.address}<br>
+               City: ${metaData.city}<br>
+               State: ${metaData.state}<br>
+               Zip: ${metaData.xzip}<br>
+               Latitude: ${metaData.latitude}<br>
+               Longitude: ${metaData.longitude}<br>
+               Hazard Rank: ${metaData.hrs_score}<br>
+               <a href="https://cumulis.epa.gov/supercpad/cursites/csitinfo.cfm?id=${site_id}">EPA Website: ${metaData.name}</a></h5>`
+              );
+
+      d3.select("#sitemap_title").html(`Sattelite View: ${metaData.name}`);
+      d3.select("#tableTitle").html(`Superfund Site Detail`);
+   
+      //   Object.entries(metaData).forEach( ([key, value]) => {
+      //  // var row = metaPanel.insert("tr");
+      //   var cell = metaPanel.insert("h6");
+      //   var kontent = key + ": " + value;
+      //   cell.text(kontent);
+            // });
     });
 }
 
 function buildMap() {
   id = d3.select("#selDataset").property("value");
   d3.json("/superfund_sites/"+id).then(function(metaData) {
-    var latitude = +metaData.latitude;
-    var longitude = +metaData.longitude;
+    var latitude = metaData.latitude;
+    var longitude = metaData.longitude;
+
+    document.getElementById('sitemap').innerHTML = "<div id='maptwo' style ='width: 25%; height: 40%;'></div>";
     
-    // var mapPanel = d3.select("#map2");
-
-    // Use `.html("") to clear any existing metadata and gauge
-    // mapPanel.html("");
-
     // Add satelite tile layer
-    var satelliteMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+    var satelliteMap = new L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
       attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
-      maxZoom: 14,
+      maxZoom: 18,
       id: "mapbox.satellite",
       accessToken: API_KEY
     });
 
     // Create map object
-    var siteMap = L.map("maptwo", {
+    var siteMap = new L.map("maptwo", {
       center: [latitude, longitude],
-      zoom: 14,
+      zoom: 13,
       layers: [satelliteMap]
+    
     });
 
   });
@@ -56,11 +76,14 @@ function buildMap() {
 function buildGauge() {
   id = d3.select("#selDataset").property("value");
   d3.json("/superfund_sites/"+id).then(function(metaData) {
-  
+
+  gaugeTitle = (`${metaData.name}`);
+  d3.select("#gaugeTitle").html(gaugeTitle);
+    
   var hazardScore = metaData.hrs_score;
   console.log(hazardScore);
   
-  var level = hazardScore * 2.25
+  var level = hazardScore * 2
 
   var degrees = 180 - level,
     radius = .5;
@@ -79,7 +102,7 @@ function buildGauge() {
   var data = [{
     type: 'scatter',
     x: [0], y: [0],
-    marker: { size: 15, color: '850000' },
+    marker: { size: 15, color: '000000' },
     showlegend: false,
     id: 'scrubs/week',
     text: hazardScore,
@@ -88,20 +111,20 @@ function buildGauge() {
   {
     values: [50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50],
     rotation: 90,
-    text: ["8-9", "7-8", "6-7", "5-6", "4-5", "3-4", "2-3", "1-2", "0-1", ""],
+    text: ["80-90", "70-80", "60-70", "50-60", "40-50", "30-40", "20-30", "10-20", "0-10", ""],
     textinfo: 'text',
     textposition: 'inside',
     marker: {
-      colors: ['rgba(0, 65, 0, .5)',
-               'rgba(15, 95, 10, .5)',
-               'rgba(40, 120, 20, .5)',
-               'rgba(110, 160, 50, .5)',
-               'rgba(160, 177, 95, .5)',
-               'rgba(195, 195, 115, .5)',
-               'rgba(225, 210, 130, .5)',
-               'rgba(235, 220, 155, .5)',
-               'rgba(245, 230, 200, .5)',
-               'rgba(255, 255, 255, 0)'
+      colors: ['rgba(255,0,0,0.6)',
+               'rgba(255,28,28,0.6)',
+               'rgba(255,56,56,0.6)',
+               'rgba(255,84,84,0.6)',
+               'rgba(255,112,112,0.6)',
+               'rgba(255,140,140,0.6)',
+               'rgba(255,168,168,0.6)',
+               'rgba(255,197,197,0.6)',
+               'rgba(255,225,225,0.6)',
+               '#FFFFFF',
               ]
     },
     labels: ['9', '8', '7', '6', '5', '4', '3', '2', '1', '0'],
@@ -115,12 +138,12 @@ function buildGauge() {
     shapes: [{
       type: 'path',
       path: path,
-      fillcolor: '850000',
+      fillcolor: '000000',
       line: {
-        color: '850000'
+        color: '000000'
       }
     }],
-    title: '<b>Superfund Site Hazard Ranking System</b>',
+    title: `<b>Superfund Site Hazard Ranking System<br>${metaData.name}</b>`,
     height: 450,
     width: 400,
     margin: {
@@ -140,108 +163,10 @@ function buildGauge() {
     }
   };
 
-  Plotly.newPlot('gauge', data, layout);
+  Plotly.newPlot('gauge', data, layout, {displayModeBar: false});
 
 });
 }
-
-// function buildCharts() {
-//   // @TODO: Use `d3.json` to fetch the sample data for the plots
-//   id = d3.select("#selDataset").property("value");
-//   d3.json("/samples/"+id).then(function(sampleResponse) {
-      
-//       var sampleData = sampleResponse;
-//       //var sampleData = sampleResponse.sort(function(a, b) {return a.sample_values - b.sample_values});
-//       var sample_values = sampleData.sample_values;
-//       var otu_ids = sampleData.otu_ids;
-//       var otu_labels = sampleData.otu_labels;
-
-//       //1) combine arrays:
-//       var sort_values = [];
-//       for ( var j=0; j < sample_values.length; j++)
-//         sort_values.push({'sample_values': sample_values[j], 'otu_ids': otu_ids[j], 'otu_labels': otu_labels[j]});
-//         sort_values[sample_values[j]] = otu_labels[j];
-      
-//       //2) sort:
-//       sort_values.sort(function(a, b) {
-//         return ((a.sample_values > b.sample_values) ? -1 : ((a.sample_values == b.sample_values) ? 0 : 1));
-//       });
-
-//       //3) separate them back out
-//       for (var k = 0; k < sort_values.length; k++) {
-//         sample_values[k] = sort_values[k].sample_values;
-//         otu_ids[k] = sort_values[k].otu_ids;
-//         otu_labels[k] = sort_values[k].otu_labels;
-//       }
-
-      
-//       // Build a Bubble Chart using sample data
-//       var trace1 = {
-//         x: otu_ids,
-//         y: sample_values,
-//         mode: 'markers',
-//         hoverinfo: 'text',
-//         colorscale: 'earth',
-//         marker:
-//          {size: sample_values,
-//           color: otu_ids,
-//           colorscale: [
-//             ['0.0', 'rgb(0, 0, 100)'],
-//             ['0.111111111111', 'rgb(25, 100, 200)'],
-//             ['0.222222222222', 'rgb(50, 150, 175)'],
-//             ['0.333333333333', 'rgb(75, 200, 150)'],
-//             ['0.444444444444', 'rgb(75, 250, 100)'],
-//             ['0.555555555556', 'rgb(125, 250, 100)'],
-//             ['0.666666666667', 'rgb(150, 200, 75)'],
-//             ['0.777777777778', 'rgb(175, 150, 50)'],
-//             ['0.888888888889', 'rgb(200, 100, 25)'],
-//             ['1.0', 'rgb(225, 50, 0)']
-//           ],
-//           cmin: 0,
-//           cmax: 3500,
-//           },
-//         text: otu_labels,
-//       };
-
-//       var data = [trace1];
-
-//       var layout = {
-//         showlegend: false,
-//         height: 400,
-//         width: 1200,
-//         margin: {
-//           b: 20,
-//           t: 0,
-//           pad: 0
-//         }
-//       };
-
-//       Plotly.react("bubble", data, layout);
-
-//       // Build a Pie Chart using sample data
-//       var data = [{
-//         values: sample_values.slice(0, 10),
-//         labels: otu_ids.slice(0, 10),
-//         hovertext: otu_labels.slice(0, 10),
-//         type: "pie"
-//       }];
-
-//       var layout = {
-//         height: 350,
-//         width: 350,
-//         margin: {
-//           b: 0,
-//           t: 0,
-//           l: 0,
-//           r: 0,
-//           pad: 0,
-//         }
-//       };
-
-//       Plotly.react("pie", data, layout);
-    
-//   });
-// }
 
 function init() {
 
