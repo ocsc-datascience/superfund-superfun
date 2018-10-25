@@ -8,6 +8,16 @@
     position: fixed;
 }
 
+#maptwo {
+    height: 40%;
+    width: 40%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 0;
+    align-self: stretch;
+    position: fixed;
+}
+
 .legend {
     line-height: 18px;
     color: #555;

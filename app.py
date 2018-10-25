@@ -137,8 +137,6 @@ def sample_metadata(id):
     print(sample_metadata)
     return jsonify(sample_metadata)
 
-# @app.route("/")
-
 @app.route("/life_expectancy")
 def life_expectancy():
     r""" This function returns the average life expectancy

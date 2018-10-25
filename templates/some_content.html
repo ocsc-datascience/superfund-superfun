@@ -10,10 +10,7 @@
      crossorigin=""/>
      
      <!-- Bootstrap CSS -->
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css">
-     
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-       <style type="text/css">
+    <style type="text/css">
          .jumbotron {
            background-image: url("https://www.conservationinstitute.org/wp-content/uploads/2018/05/1200-8609-land-pollution-photo2.jpg");
            background-size: cover;
@@ -23,6 +20,9 @@
            margin: 5px 000;
            text-align:center; }
      </style>
+
+    <link rel="stylesheet" type="text/css" href="../static/css/map_style.css">
+
      </head>
      <body>
      
@@ -47,18 +47,12 @@
              </div>
            </div>
            <div class="col-md-5">
-             <div id="pie"></div>
+             <div class="map-wrapper" id="maptwo"></div>
            </div>
            <div class="col-md-5">
              <div id="gauge"></div>
            </div>
          </div>
-       
-       <div class="row">
-         <div class="col-md-12">
-           <div style="align-items: center" id="map2"></div>
-         </div>
-       </div>
      </div>
      <script src="https://cdn.plot.ly/plotly-1.31.2.min.js"></script>
      
@@ -67,8 +61,6 @@
 
      <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script> -->
      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-     <!-- <script src="{{ url_for('static', filename='js/bonus.js') }}"></script> -->
-     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
      <!-- Leaflet JavaScript -->
      <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
