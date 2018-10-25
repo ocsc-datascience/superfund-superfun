@@ -32,14 +32,19 @@
             <a class="nav-link" href="state_stats">State Stats</a>
           </li>
           {% if xpage == "Data" %}
-          <li class="nav-item">
-            <a class="nav-link active" href="data">Data</a>
-          </li>
+          <li id="stats-link" class="nav-item active">
           {% else %}
-          <li class="nav-item">
+          <li id="stats-link" class="nav-item">
+          {% endif %}
             <a class="nav-link" href="data">Data</a>
           </li>
-          {% endif %}
+          {% if xpage == "Data Sources" %}
+          <li id="stats-link" class="nav-item active">
+            {% else %}
+          <li id="stats-link" class="nav-item">
+            {% endif %}
+            <a class="nav-link" href="data_sources">Data Sources</a>
+          </li>
          </ul>
       </div>
     </nav>

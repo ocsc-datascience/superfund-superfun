@@ -41,6 +41,11 @@ def data():
     
     return render_template("data.html",xpage="Data")
 
+@app.route("/data_sources")
+def data_sources():
+    r"""Display the data sources"""
+    
+    return render_template("data_sources.html",xpage="Data Sources")
 
 
 @app.route("/state_stats/get_data")
