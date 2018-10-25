@@ -95,6 +95,45 @@ def superfund_sites():
     
     return jsonify(dlist)
 
+@app.route("/superfund_sites/<id>")
+def sample_metadata(id):
+    """Return the metadata for a given superfund site name."""
+    sel = [
+        Superfund.id,
+        Superfund.epa_id,
+        Superfund.site_id,
+        Superfund.name,
+        Superfund.address,
+        Superfund.city,
+        Superfund.state,
+        Superfund.xzip,
+        Superfund.latitude,
+        Superfund.longitude,
+        Superfund.hrs_score,
+    ]
+
+    results = db.session.query(*sel).filter(Superfund.id == id).all()
+
+    # Create a dictionary entry for each row of metadata information
+    sample_metadata = {}
+    for result in results:
+        sample_metadata["id"] = result[0]
+        sample_metadata["epa_id"] = result[1]
+        sample_metadata["site_id"] = result[2]
+        sample_metadata["name"] = result[3]
+        sample_metadata["address"] = result[4]
+        sample_metadata["city"] = result[5]
+        sample_metadata["state"] = result[6]
+        sample_metadata["xzip"] = result[7]
+        sample_metadata["latitude"] = result[8]
+        sample_metadata["longitude"] = result[9]
+        sample_metadata["hrs_score"] = result[10]
+
+    print(sample_metadata)
+    return jsonify(sample_metadata)
+
+# @app.route("/")
+
 @app.route("/life_expectancy")
 def life_expectancy():
     r""" This function returns the average life expectancy
