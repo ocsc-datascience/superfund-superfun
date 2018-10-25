@@ -50,9 +50,6 @@ d3.json("/superfund_sites", function (data) {
 
   });
 
-
-  
-
 });
 
 function createStateChloro(prop) {
@@ -62,18 +59,16 @@ function createStateChloro(prop) {
   // All features together
   function XonEachFeature(feature, layer) {
     layer.on({
-      mouseover: highlightFeature,
-      mouseout: resetHighlight,
-      click: zoomToFeature
+      //mouseover: highlightFeature,
+      //mouseout: resetHighlight,
+      //click: zoomToFeature
     });
   }
 
   // Add style to assign state color based on population density
   function Xstyle(feature) {
-    // console.log(feature.properties)
     var prop_max = prop+"_max";
     var prop_min = prop+"_min";
-    console.log(feature.properties.state_stats);
 
     return {
       fillColor: colorScale(feature.properties.state_stats[prop],
@@ -133,7 +128,6 @@ function createMap(superfundSites,statePopDensChloro,
   // Overlays that may be toggled on or off
   var overlayMaps = {
     "Superfund Sites": superfundLayer,
- //   "State Boundaries": stateBoundaries
   };
 
   var overlayMapsAsBase = {
@@ -148,7 +142,7 @@ function createMap(superfundSites,statePopDensChloro,
   var myMap = L.map("map", {
     center: [37.8283, -98.5795],
     zoom: 5,
-    layers: [streetMap, superfundLayer, statePopDensChloro]
+    layers: [streetMap, superfundLayer, emptyLayer]
   });
 
 
@@ -164,15 +158,14 @@ function createMap(superfundSites,statePopDensChloro,
   myMap.addControl(xcontrol);
 
 
-  // Create legend
-  var legend = L.control({ position: 'bottomright' });
-
-  legend.onAdd = function (myMap) {
-
+  // Create legend, this one is for the superfund stuff
+  var legendSF = L.control({ position: 'bottomright' });
+  legendSF.onAdd = function (myMap) {
     var div = L.DomUtil.create('div', 'info legend'),
       grades = [0, 10, 20, 30, 40, 50, 60, 70],
-      labels = [];
+      labels = ['<strong>Text</strong>'];
 
+    div.innerHTML += '<b>Hazard Ranking</b><br>' 
     // Loop through intervals to generate labels and colored squares for superfund hazard rank legend
     for (var i = 0; i < grades.length; i++) {
       div.innerHTML +=
@@ -181,7 +174,24 @@ function createMap(superfundSites,statePopDensChloro,
     }
     return div;
   };
+  legendSF.addTo(myMap);
 
-  legend.addTo(myMap);
+  myMap.on('overlayadd', function (eventLayer) {
+    if (eventLayer.name === "Superfund Sites") {
+      legendSF.addTo(this);
+    }
+    else { 
+      this.removeControl(legendSF);
+    }
+  });
+
+  myMap.on('overlayremove', function (eventLayer) {
+    if (eventLayer.name === "Superfund Sites") {
+      this.removeControl(legendSF);
+    }
+  });
+
+
+  //legend.addTo(myMap);
 
 }
