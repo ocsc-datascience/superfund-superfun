@@ -77,7 +77,7 @@ function buildGauge() {
   id = d3.select("#selDataset").property("value");
   d3.json("/superfund_sites/"+id).then(function(metaData) {
 
-  gaugeTitle = (`${metaData.name}`);
+  gaugeTitle = (`Superfund Hazard Ranking System<br>${metaData.name}`);
   d3.select("#gaugeTitle").html(gaugeTitle);
     
   var hazardScore = metaData.hrs_score;
@@ -143,15 +143,15 @@ function buildGauge() {
         color: '000000'
       }
     }],
-    title: `<b>Superfund Site Hazard Ranking System<br>${metaData.name}</b>`,
-    height: 450,
-    width: 400,
+    title: `<b>Superfund Site Hazard Ranking</b>`,
+    height: 350,
+    width: 450,
     margin: {
       l: 0,
       r: 0,
       b: 0,
-      t: 100,
-      pad: 0
+      t: 60,
+      pad: 5
     },
     xaxis: {
       zeroline: false, showticklabels: false,
