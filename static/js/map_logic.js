@@ -12,6 +12,7 @@ d3.json("/superfund_sites", function (data) {
     data.hrs_score = +sqlitedata.hrs_score;
     data.latitude = +sqlitedata.latitude;
     data.longitude = +sqlitedata.longitude;
+    data.id = +sqlitedata.id;
     superfundSites.push(
       L.circleMarker([data.latitude, data.longitude],
         {
@@ -23,7 +24,7 @@ d3.json("/superfund_sites", function (data) {
           weight: .5
         }
         //,{ icon: L.BeautifyIcon.icon(options) }
-      ).bindPopup(data.name.bold() + "<br>" + data.address + "<br>" + data.city + ", " + data.state + "<br>" + "HRS Score: " + data.hrs_score.toString().bold()));
+      ).bindPopup(data.name.bold() + "<br>" + data.address + "<br>" + data.city + ", " + data.state + "<br>HRS Score: " + data.hrs_score + "<br>Site ID: " + data.id.toString().bold()));
   });
 
   var statePopDensChloro;

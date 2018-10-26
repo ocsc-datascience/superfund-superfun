@@ -100,8 +100,8 @@ def superfund_sites():
     
     return jsonify(dlist)
 
-@app.route("/superfund_sites/<id>")
-def sample_metadata(id):
+@app.route("/superfund_sites/<idname>")
+def sample_metadata(idname):
     """Return the metadata for a given superfund site name."""
     sel = [
         Superfund.id,
@@ -115,9 +115,10 @@ def sample_metadata(id):
         Superfund.latitude,
         Superfund.longitude,
         Superfund.hrs_score,
+        Superfund.idname,
     ]
 
-    results = db.session.query(*sel).filter(Superfund.id == id).all()
+    results = db.session.query(*sel).filter(Superfund.idname == idname).all()
 
     # Create a dictionary entry for each row of metadata information
     sample_metadata = {}
@@ -133,6 +134,7 @@ def sample_metadata(id):
         sample_metadata["latitude"] = result[8]
         sample_metadata["longitude"] = result[9]
         sample_metadata["hrs_score"] = result[10]
+        sample_metadata["idname"] = result[11]
 
     print(sample_metadata)
     return jsonify(sample_metadata)

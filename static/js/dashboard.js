@@ -1,15 +1,16 @@
 function buildMetadata() {
   // @TODO: Complete the following function that builds the metadata panel
   // Use `d3.json` to fetch the metadata for a sample
-  id = d3.select("#selDataset").property("value");
-  d3.json("/superfund_sites/"+id).then(function(metaData) {
+  idname = d3.select("#selDataset").property("value");
+  d3.json("/superfund_sites/"+idname).then(function(metaData) {
 
     function pad(n) {
       return (n < 1000000) ? ("0" + n) : n;
     };
     
     var site_id = pad(metaData.site_id);
-    console.log(site_id);
+    console.log(idname);
+
 
       // Use d3 to select the panel with id of `#sample-metadata` and id of `#gauge`
       var metaPanel = d3.select("#sample-metadata");
@@ -46,8 +47,8 @@ function buildMetadata() {
 }
 
 function buildMap() {
-  id = d3.select("#selDataset").property("value");
-  d3.json("/superfund_sites/"+id).then(function(metaData) {
+  idname = d3.select("#selDataset").property("value");
+  d3.json("/superfund_sites/"+idname).then(function(metaData) {
     var latitude = metaData.latitude;
     var longitude = metaData.longitude;
 
@@ -74,8 +75,8 @@ function buildMap() {
 
 // Build the Gauge Chart
 function buildGauge() {
-  id = d3.select("#selDataset").property("value");
-  d3.json("/superfund_sites/"+id).then(function(metaData) {
+  idname = d3.select("#selDataset").property("value");
+  d3.json("/superfund_sites/"+idname).then(function(metaData) {
 
   gaugeTitle = (`Superfund Hazard Ranking System<br>${metaData.name}`);
   d3.select("#gaugeTitle").html(gaugeTitle);
@@ -177,6 +178,7 @@ function init() {
   d3.json("/superfund_sites").then(function(superfundData) {
     superfundData.forEach(function(data) {
       data.id = +data.id;
+      data.idname = data.idname;
       data.epa_id = data.epa_id;
       data.site_id = +data.site_id;
       data.name = data.name;
@@ -188,17 +190,18 @@ function init() {
       data.longitude = +data.longitude;
       data.hrs_score = +data.hrs_score;
   });
-  var sampleId = superfundData.map(d => d.id);
+  // var sampleId = superfundData.map(d => d.id);
+  var sampleIdName = superfundData.map(d => d.idname);
    
-    sampleId.forEach((id) => {
+    sampleIdName.forEach((idname) => {
       selector
         .append("option")
-        .text(id)
-        .property("value", id);
+        .text(idname)
+        .property("value", idname);
   });
  
     // Use the first sample from the list to build the initial plots
-    const firstSample = sampleId[0];
+    const firstSample = sampleIdName[0];
     // buildCharts(firstSample);
     buildMetadata(firstSample);
     buildGauge(firstSample);
