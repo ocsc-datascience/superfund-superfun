@@ -18,8 +18,9 @@
 
 
 $("#tabulator-controls  button[name=download]").on("click", function(){
-   	table.download("csv", " Download.csv");
+   	table.download("csv", "SuperFundSites.csv");
 });
+
 
 d3.json("/superfund_sites", function(data) {
     //load sample data into the table
