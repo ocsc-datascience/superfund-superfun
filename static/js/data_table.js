@@ -7,13 +7,13 @@
 	layout:"fitColumns", //fit columns to width of table (optional)
 	responsiveLayout:"hide",
  	columns:[ //Define Table Columns
-		{title:"Site ID", field:"id", width:80, align:"right"},
+		{title:"Site ID", field:"id", width:80, align:"right", sorter:"number"},
 		{title:"Site Name", field:"name"},
 	 	{title:"Address", field:"address", align:"left"},
 	 	{title:"City", field:"city", align:"left", headerFilter:true},
-	 	{title:"State", field:"state", align:"left", headerFilter:true},
-	 	{title:"Zip Code", field:"xzip", align:"left", headerFilter:true},
-	 	{title:"HRS Score", field:"hrs_score", align:"right", sorter:"number"},
+	 	{title:"State", field:"state", align:"left", headerFilter:true, width:100},
+	 	{title:"Zip Code", field:"xzip", align:"left", headerFilter:true, width:120},
+	 	{title:"HRS Score", field:"hrs_score", align:"right", sorter:"number", width:120},
  	],
 });
 
