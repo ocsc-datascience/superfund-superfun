@@ -7,7 +7,8 @@
 	layout:"fitColumns", //fit columns to width of table (optional)
 	responsiveLayout:"hide",
  	columns:[ //Define Table Columns
-	 	{title:"Site Name", field:"name"},
+		{title:"Site ID", field:"id", width:80, align:"right"},
+		{title:"Site Name", field:"name"},
 	 	{title:"Address", field:"address", align:"left"},
 	 	{title:"City", field:"city", align:"left", headerFilter:true},
 	 	{title:"State", field:"state", align:"left", headerFilter:true},
