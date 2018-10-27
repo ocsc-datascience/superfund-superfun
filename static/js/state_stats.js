@@ -242,7 +242,7 @@ d3.json("/state_stats/get_data").then(function(statesData) {
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 15)
-    .attr("fill", "lightblue")
+    .attr("fill", "purple")
     .attr("opacity", ".6");
 
   // append initial circle text
