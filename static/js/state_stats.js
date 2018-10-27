@@ -135,15 +135,15 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesText) {
       var xformat = d3.format("");
       var xsuffix = "";
       break;
-    case "population_density":
-      var xlabel = "Pop Density";
-      var xformat = d3.format(",");
-      var xsuffix = "";
+    case "smoking":
+      var xlabel = "Smoking";
+      var xformat = d3.format("");
+      var xsuffix = "%";
       break;
-    case "income":
-      var xlabel = "Income";
-      var xformat = d3.format("$,");
-      var xsuffix = "";
+    case "obesity":
+      var xlabel = "Obesity";
+      var xformat = d3.format("");
+      var xsuffix = "%";
   }
 
   switch (chosenYAxis) {
@@ -152,35 +152,36 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesText) {
       var yformat = d3.format(",");
       var ysuffix = "";
       break;
-    case "cancer_morbidity":
-      var ylabel = "Cancer Morbidity";
-      var yformat = d3.format(",");
+    case "income":
+      var ylabel = "Income";
+      var yformat = d3.format("$,");
       var ysuffix = "";
       break;
-    case "veterans":
-      var ylabel = "Veterans";
+    case "population_density":
+      var ylabel = "Population Density";
       var yformat = d3.format("");
-      var ysuffix = "%";
+      var ysuffix = "";
   }
   
   var toolTip = d3.tip()
     .attr("class", "tooltip")
     .offset([80, -60])
     .html(function(d) {
-      return (`${d.state}<br>${xlabel}: ${xformat(d[chosenXAxis])}${xsuffix}<br>${ylabel}: ${yformat(d[chosenYAxis])}${ysuffix}`);
+      return (`${d.state.bold()}<br>${xlabel}: ${xformat(d[chosenXAxis])}${xsuffix}<br>${ylabel}: ${yformat(d[chosenYAxis])}${ysuffix}`);
     });
 
   circlesText.call(toolTip);
 
   circlesText.on("mouseover", function(data) {
-    toolTip.show(data);
+    toolTip.show(data)
   })
     // onmouseout event
     .on("mouseout", function(data, index) {
       toolTip.hide(data);
-    });
-
+  });
+   
   return circlesText;
+
 }
 
 //----------------------------------------------------------------
@@ -202,6 +203,10 @@ d3.json("/state_stats/get_data").then(function(statesData) {
       data.cancer_incidence = +data.cancer_incidence_rate;
       data.superfund_sites = +data.sf_site_count;
       data.superfund_score = +data.avg_hrsscore;
+      data.smoking = +data.smokes;
+      data.obesity = +data.obesity;
+
+      console.log(data.smoking);
 
 });
 
@@ -268,16 +273,16 @@ d3.json("/state_stats/get_data").then(function(statesData) {
   var popDensityLabel = xLabelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 40)
-    .attr("value", "population_density") // value to grab for event listener
+    .attr("value", "smoking") // value to grab for event listener
     .classed("inactive", true)
-    .text("Population Density");
+    .text("Smoking (%)");
 
   var incomeLabel = xLabelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 60)
-    .attr("value", "income") // value to grab for event listener
+    .attr("value", "obesity") // value to grab for event listener
     .classed("inactive", true)
-    .text("Household Income (Median)");
+    .text("Obesity (%)");
 
     // Create group for 3 y-axis labels
 
@@ -286,7 +291,7 @@ d3.json("/state_stats/get_data").then(function(statesData) {
 
   var cancerMortalityLabel = yLabelsGroup.append("text")
     .attr("transform", "rotate(-90)")  
-    .attr("y", -40)
+    .attr("y", -50)
     .attr("x", 0)
     .attr("value", "cancer_mortality") // value to grab for event listener
     .classed("active", true)
@@ -294,19 +299,19 @@ d3.json("/state_stats/get_data").then(function(statesData) {
   
   var cancerPrevalenceLabel = yLabelsGroup.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", -60)
+    .attr("y", -70)
     .attr("x", 0)
-    .attr("value", "cancer_morbidity") // value to grab for event listener
+    .attr("value", "population_density") // value to grab for event listener
     .classed("inactive", true)
-    .text("Cancer Morbidity (per 100,000)");
+    .text("Population Density (per sq mile)");
 
   var pctVeteransLabel = yLabelsGroup.append("text")
     .attr("transform", "rotate(-90)")  
-    .attr("y", -80)
+    .attr("y", -90)
     .attr("x", 0)
-    .attr("value", "veterans") // value to grab for event listener
+    .attr("value", "income") // value to grab for event listener
     .classed("inactive", true)
-    .text("Veterans (%)");
+    .text("Household Income (Median)");
 
   // updateToolTip function above csv import
   var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -358,7 +363,7 @@ d3.json("/state_stats/get_data").then(function(statesData) {
               .classed("active", false)
               .classed("inactive", true);
               break;
-          case "population_density":
+          case "smoking":
             superfundCntLabel
               .classed("active", false)
               .classed("inactive", true);
@@ -369,7 +374,7 @@ d3.json("/state_stats/get_data").then(function(statesData) {
               .classed("active", false)
               .classed("inactive", true);
               break;
-          case "income":
+          case "obesity":
             superfundCntLabel
               .classed("active", false)
               .classed("inactive", true);
@@ -429,7 +434,7 @@ d3.json("/state_stats/get_data").then(function(statesData) {
               .classed("active", false)
               .classed("inactive", true);
               break;
-          case "cancer_morbidity":
+          case "population_density":
             cancerMortalityLabel
               .classed("active", false)
               .classed("inactive", true);
@@ -440,7 +445,7 @@ d3.json("/state_stats/get_data").then(function(statesData) {
               .classed("active", false)
               .classed("inactive", true);
               break;
-          case "veterans":
+          case "income":
             cancerMortalityLabel
               .classed("active", false)
               .classed("inactive", true);

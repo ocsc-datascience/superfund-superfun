@@ -62,11 +62,11 @@ svg {
 
 .tooltip {
   position: absolute;
-  width: 135px;
-  height: 60px;
+  width: 250px;
+  height: 80px;
   padding: 2px;
   padding-top: 8px;
-  font: 12px sans-serif;
+  font: 14pt sans-serif;
   color: white;
   text-align: center;
   background: green;
@@ -92,7 +92,7 @@ svg {
 .inactive {
   font-weight: lighter;
   fill: green;
-  transition: fill 0.3s ease-out;
+  transition: fill 3.3s ease-out;
   text-anchor: middle;
 }
 
