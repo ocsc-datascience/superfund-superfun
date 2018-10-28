@@ -52,7 +52,7 @@ function buildMap() {
     var latitude = metaData.latitude;
     var longitude = metaData.longitude;
 
-    document.getElementById('sitemap').innerHTML = "<div id='maptwo' style ='width: 25%; height: 40%;'></div>";
+   document.getElementById('sitemap').innerHTML = '<div id="maptwo"></div>';
     
     // Add satelite tile layer
     var satelliteMap = new L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {

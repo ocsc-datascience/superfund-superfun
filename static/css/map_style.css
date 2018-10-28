@@ -15,14 +15,8 @@ html, body, #sitemap {
     padding: auto;
 }
 
-#sitemap {
-    height: 100%;
-    width: 100%;
-    margin-top: 0px;
-    margin-bottom: 10px;
-    padding: 0;
-    align-self: stretch;
-    position: fixed;
+.mapcontainer {
+    height: 500px;
 }
 
 #maptwo {
@@ -31,9 +25,20 @@ html, body, #sitemap {
     margin-top: 0px;
     margin-bottom: 10px;
     padding: 0;
+/*    align-self: stretch; */
+    position: absolute;
+/*    position: fixed; */
+}
+
+/* #maptwo {
+    height: 100%;
+    width: 100%;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding: 0;
     align-self: stretch;
     position: fixed;
-}
+} */
 
 .legend {
     line-height: 18px;
